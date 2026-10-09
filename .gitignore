@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js Build Outputs
+.next/
+out/
+build/
+dist/
+
+# Environment Variables & Sensitive Credentials
+.env
+.env*.local
+.env.production
+.env.development
+!.env.example
+
+# Go Binaries & Build Artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+backend/tmp/
+backend/bin/
+api.exe
+newtea-api.exe
+
+# Air Live Reload
+tmp/
+
+# Uploads & User Generated Files
+uploads/
+../../data/uploads/tea/
+
+# OS Specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor Configurations
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+bun.lockb

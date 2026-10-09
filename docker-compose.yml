@@ -1,0 +1,58 @@
+services:
+  # 1. Go Fiber Backend API
+  tea-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tea-backend
+    restart: always
+    environment:
+      - ENVIRONMENT=production
+      - PORT=8080
+      - DB_HOST=${DB_HOST:-tea-db}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_USER=${POSTGRES_USER:-tea_user}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-tea_password}
+      - DB_NAME=${POSTGRES_DB:-tunorth-tea_db}
+      - DATABASE_URL=postgres://${POSTGRES_USER:-tea_user}:${POSTGRES_PASSWORD:-tea_password}@${DB_HOST:-tea-db}:${DB_PORT:-5432}/${POSTGRES_DB:-tunorth-tea_db}?sslmode=disable
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-https://tea.tn.ac.th,http://tea.local,http://192.168.165.11:8010,http://localhost:3000,http://localhost:8010}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-tunorth-newtea-super-secret-key-2026-phase1}
+    volumes:
+      - ../../data/uploads/tea:/app/uploads
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1:8080/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tunorth-net
+
+  # 2. Next.js 16 (React 19 + Bun) Frontend
+  tea-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - BACKEND_INTERNAL_URL=http://tea-backend:8080
+    container_name: tea-frontend
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - BACKEND_INTERNAL_URL=http://tea-backend:8080
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-tunorth-newtea-super-secret-key-2026-phase1}
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL:-https://tea.tn.ac.th}
+      - DATABASE_URL=postgres://${POSTGRES_USER:-tea_user}:${POSTGRES_PASSWORD:-tea_password}@${DB_HOST:-tea-db}:5432/${POSTGRES_DB:-tunorth-tea_db}?sslmode=disable
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+    depends_on:
+      - tea-backend
+    networks:
+      - tunorth-net
+
+networks:
+  tunorth-net:
+    external: true
