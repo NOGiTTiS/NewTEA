@@ -31,6 +31,7 @@
 | **Database & ORM** | **PostgreSQL 17 + GORM** | ฐานข้อมูลเชิงสัมพันธ์ ตัวแปรชื่อ `tunorth-tea_db` |
 | **Authentication** | **Better Auth** | รองรับ Google Workspace SSO (`@tn.ac.th`) และ Username/Password |
 | **DevOps & Server** | **Docker + Ubuntu Server 24.04** | เซิร์ฟเวอร์ On-Premise ของโรงเรียน (เน็ตเวิร์ก `tunorth-net`, Port 8010) ตาม [DEPLOYMENT_GUIDE.md](file:///D:/TUNorth/DEPLOYMENT_GUIDE.md) |
+| **Source Code Repository** | **GitHub (Git)** | [https://github.com/NOGiTTiS/NewTEA](https://github.com/NOGiTTiS/NewTEA) |
 
 ---
 
@@ -419,6 +420,9 @@ erDiagram
 - [x] ระบบ Seed บัญชีผู้ดูแลระบบคนแรกอัตโนมัติ (`admin@tn.ac.th` / `Admin@2026`) เมื่อเริ่มระบบบน Fresh Database
 - [x] เชื่อมโยงสคริปต์ระบบแม่ของโรงเรียน (`deploy.sh`, `setup.sh`, `restore_db.sh`, `deploy_newtea.sh`) และอัปเดต LAN Portal (Port 80)
 - [x] กำหนดค่า Nginx Proxy Port 8010 และ Cloudflare Tunnel ตาม [DEPLOYMENT_GUIDE.md](file:///D:/TUNorth/DEPLOYMENT_GUIDE.md)
+- [x] แก้ไขปัญหา Next.js Rewrite Destination (HTTP 500 บน Cloudflare): ปรับปรุง `next.config.ts`, `Dockerfile`, `docker-compose.yml` ให้ส่ง `BACKEND_INTERNAL_URL=http://tea-backend:8080` ในขั้นตอน Docker Build สำเร็จ
+- [x] ปรับปรุง Nginx Gateway สำหรับ `tea.tn.ac.th`: เพิ่ม Route `/api/auth` ส่งไปยัง `tea-frontend:3000` บน Port 80 และ Port 8010 ป้องกันการส่ง Auth ผิด Container
+- [x] จัดการ Version Control: สร้าง `.gitignore`, `.env.example`, `README.md` และ Push โค้ดทั้งหมดขึ้น GitHub ([https://github.com/NOGiTTiS/NewTEA](https://github.com/NOGiTTiS/NewTEA))
 - [x] ทดสอบประสิทธิภาพการทำงานพร้อมกันของครู 100–150 คน (Concurrency & Load Test)
 - [x] ทำคู่มือการใช้งานสำหรับครูและผู้ดูแลระบบ ([user_manual.md](file:///D:/TUNorth/apps/NewTEA/docs/user_manual.md), [admin_manual.md](file:///D:/TUNorth/apps/NewTEA/docs/admin_manual.md))
 
